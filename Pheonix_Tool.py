@@ -3,11 +3,15 @@ import platform
 import random
 import string
 import time
+import webbrowser
+import sys
 
 import discord
 from colorama import *
 from discord.ext import commands
 import pygame
+import inquirer
+import ctypes
 
 now = time.localtime(time.time())
 bot = commands.Bot(command_prefix='d', self_bot=True)
@@ -23,6 +27,33 @@ if platform.system() == 'Linux':
 init()
 pygame.init()
 
+def chronometre():
+    print(f"""{Fore.CYAN}
+     ██████╗██╗  ██╗██████╗  ██████╗ ███╗   ██╗ ██████╗ ███╗   ███╗███████╗████████╗██████╗ ███████╗
+    ██╔════╝██║  ██║██╔══██╗██╔═══██╗████╗  ██║██╔═══██╗████╗ ████║██╔════╝╚══██╔══╝██╔══██╗██╔════╝
+    ██║     ███████║██████╔╝██║   ██║██╔██╗ ██║██║   ██║██╔████╔██║█████╗     ██║   ██████╔╝█████╗  
+    ██║     ██╔══██║██╔══██╗██║   ██║██║╚██╗██║██║   ██║██║╚██╔╝██║██╔══╝     ██║   ██╔══██╗██╔══╝  
+    ╚██████╗██║  ██║██║  ██║╚██████╔╝██║ ╚████║╚██████╔╝██║ ╚═╝ ██║███████╗   ██║   ██║  ██║███████╗
+     ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝
+    {Fore.RESET}                                                                                            
+            """)
+    questionsd = [
+        inquirer.List('share', 
+            message="Que voulais faire ? ",
+            choices=['Open It', 'Menu Principal', 'Quiter']
+            )
+        ]
+    answersd = inquirer.prompt(questionsd)['share']
+    if answersd == "Quiter":
+        sys.exit()
+    if answersd == "Menu Principal":
+        clear()
+        main()
+    if answersd == "Open It":
+        webbrowser.open_new_tab(r'./chronoH/index.html')
+        clear()
+        chronometre()
+
 
 def discord_tool():
     global Embed
@@ -37,12 +68,15 @@ def discord_tool():
     ╚═════╝ ╚═╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝        ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝
     (auto mp)
     {Fore.RESET}""")
-    print(f"{Fore.RED}1 - Message")
-    print(f"{Fore.RED}2 - Embed")
-    print(f"{Fore.RED}Apuyer sur {Fore.BLUE}[m] {Fore.RED}pour revenir en arière")
-    quoi2 = input (f"{Fore.RED}Que voulais vous faire ? {Fore.RED}[{Fore.GREEN}>{Fore.RED}] ")
+    questions = [
+        inquirer.List('share',
+                message="Que voulais faire ? ",
+                choices=['Message', 'Embed', 'Menu Principal'],
+            ),
+    ]
+    answers = inquirer.prompt(questions)['share']
 
-    if quoi2 == "2":
+    if answers == "Embed":
         desc = input(f"{Fore.BLUE}[{Fore.GREEN}{time}{Fore.BLUE}]{Fore.BLUE}Titre de  l'Embed {Fore.RED}[{Fore.GREEN}>{Fore.RED}] ")
         Token = input(f"{Fore.BLUE}[{Fore.GREEN}{time}{Fore.BLUE}]{Fore.BLUE}Ton token {Fore.RED}[{Fore.GREEN}>{Fore.RED}] ")
         Embed = discord.Embed(Title='petit test', description=desc, color=808080, inline=True)
@@ -76,20 +110,16 @@ def discord_tool():
                await f.send(embed=Embed)
 
 
-    if quoi2 == "1":
+    if answers == "Message":
         Token = input(f"{Fore.BLUE}[{Fore.GREEN}{time}{Fore.BLUE}]{Fore.BLUE}quel est votre token ? {Fore.RED}[{Fore.GREEN}>{Fore.RED}] ")
         msg = input(f"{Fore.BLUE}[{Fore.GREEN}{time}{Fore.BLUE}]{Fore.BLUE}Quel est votre message ? {Fore.RED}[{Fore.GREEN}>{Fore.RED}] ")
         @bot.event
         async def on_ready():
             for f in bot.user.friends:
                 await f.send(msg)
-    if quoi2 == "m":
+    if answers == "Menu Principal":
         clear()
         main()
-
-
-
-
 
 def gpassword():
     print (f"""{Fore.GREEN}
@@ -100,22 +130,33 @@ def gpassword():
     ██║     ██║  ██║███████║███████║╚███╔███╔╝╚██████╔╝██║  ██║██████╔╝    ╚██████╔╝EN
     ╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝ ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═╝╚═════╝      ╚═════╝ 
     {Fore.RESET}""")
-    choix1 = input(f"voulais vous des caratères spéciaux Dans le mot de passe ?[oui - non] {Fore.RED}[{Fore.GREEN}>{Fore.RED}] ")
-    if choix1 == "oui":
+    questions = [
+    inquirer.List('share',
+            message="Voulais vous ajouter des caractère spéciaux",
+            choices=['oui','non'],
+        ),
+    ]
+    answers = inquirer.prompt(questions)['share']
+    if answers == "oui":
         number_of_strings = 1
         length_of_string = 8
         for x in range (number_of_strings):
             print (''.join (random.choice (string.ascii_letters + string.digits + string.punctuation) for _ in range (length_of_string)))
-    if choix1 == "non":
+    elif answers == "non":
         number_of_strings = 1
         length_of_string = 8
         for x in range (number_of_strings):
             print (''.join (random.choice (string.ascii_letters + string.digits) for _ in range (length_of_string)))
 
     retour = input(f"apuyer sur [m] pour revenir au menu principal {Fore.RED}[{Fore.GREEN}>{Fore.RED}] ")
+    
     if retour == "m":
         clear()
         main()
+    else:
+        clear()
+        main()
+
 
 def soundbord():
     global Token
@@ -151,41 +192,29 @@ def main():
     ██║     ██║  ██║███████╗╚██████╔╝██║ ╚████║██║██╔╝ ██╗
     ╚═╝     ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
     {Fore.RESET}""")
-    print ("1 - discord tool")
-    print ("2 - generate password")
-    quoi1 = input ("Que voulais vous faire ? [>] ")
-    if quoi1 == "1":
+    questions = [
+        inquirer.List('share',
+                message="Que voulais faire ? ",
+                choices=['Discord Tool', 'Generate Password', 'SoundBord', 'Chronométre'],
+            ),
+    ]
+    answers = inquirer.prompt(questions)['share']
+    if answers == "Discord Tool":
         clear ()
-        discord_tool ()
-    if quoi1 == "2":
-        clear ()
-        gpassword ()
-    if quoi1 == "3":
+        discord_tool()
+    elif answers == "Generate Password":
+        clear()
+        gpassword()
+    elif answers == "SoundBord":
         clear()
         soundbord()
-    if quoi1 not in ["1", "2", "3"]:
+    elif answers == "Chronométre":
+        clear()
+        chronometre()
+    else:
         clear()
         main()
 
+
 main ()
-
 bot.run(Token, bot=False)
-
-""""
-
-        
-        
-        
-        
-        
-       
-       
-        
-        
-        
-        
-        
-        
-        
-        
-"""
