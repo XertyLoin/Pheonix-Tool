@@ -1,5 +1,0 @@
-open tour cmd
-and tape this :
-
-pip install colorama
-pip install discord.py
