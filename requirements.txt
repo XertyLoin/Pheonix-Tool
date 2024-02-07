@@ -1,0 +1,4 @@
+webbrowser
+colorama
+pygame
+inquirer
