@@ -1,6 +1,10 @@
-Go to Requirmnts
+## Function
 
-Le Pheonix tool est est tool comportant un générateur de mot de passe
-et un auto mp discord normal et avec Embed
-il y auras des ajout au fur et à mesure du temps
-le .exe est le même mais et .exe faite confiance aucun RAT 
+- Chronometer
+- Password generator
+- Audio player
+
+  ## About it
+it's a project i started long time ago, today i don't spend time on it
+because i don't have the time, i am the devlopper of [Boblux Bot](https://bobluxcorp.000webhostapp.com/).  
+Probably one day i will spend time on it to try to make an interface using java
